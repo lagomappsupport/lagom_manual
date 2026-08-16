@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lagom 使用手冊</title>
+<style>
+  :root {
+    --bg: #F5F0E6;
+    --surface: #FBF8F1;
+    --surface-raised: #FFFFFF;
+    --border: rgba(43, 42, 40, 0.14);
+    --text: #33312C;
+    --text-secondary: #8A8272;
+    --accent: #7C8B6F;
+    --accent-soft: rgba(124, 139, 111, 0.14);
+    --terracotta: #B8876C;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1E1B22;
+      --surface: #2C2833;
+      --surface-raised: #332E3D;
+      --border: rgba(245, 240, 230, 0.12);
+      --text: #EFE9DD;
+      --text-secondary: #9B9488;
+      --accent: #9CAC8E;
+      --accent-soft: rgba(156, 172, 142, 0.16);
+      --terracotta: #CC9A7E;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1E1B22;
+    --surface: #2C2833;
+    --surface-raised: #332E3D;
+    --border: rgba(245, 240, 230, 0.12);
+    --text: #EFE9DD;
+    --text-secondary: #9B9488;
+    --accent: #9CAC8E;
+    --accent-soft: rgba(156, 172, 142, 0.16);
+    --terracotta: #CC9A7E;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Helvetica Neue", "Noto Sans TC", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin: 0 0 10px;
+  }
+
+  .meta-line {
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    font-variant-numeric: tabular-nums;
+    margin: 0 0 32px;
+  }
+
+  .summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 44px;
+  }
+
+  .summary p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--text-secondary);
+  }
+
+  .summary strong { color: var(--text); font-weight: 600; }
+
+  section {
+    margin-bottom: 40px;
+    max-width: 100%;
+  }
+
+  h2 {
+    font-weight: 700;
+    font-size: 19px;
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    text-wrap: balance;
+    scroll-margin-top: 24px;
+  }
+
+  h3 {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 26px 0 10px;
+    color: var(--text);
+    scroll-margin-top: 24px;
+  }
+  section > h3:first-of-type { margin-top: 4px; }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 44px;
+  }
+
+  .toc-title {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin: 0 0 14px;
+  }
+
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    max-width: none;
+  }
+  .toc > ol > li { margin-bottom: 10px; }
+  .toc > ol > li:last-child { margin-bottom: 0; }
+
+  .toc a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  .toc ol ol {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    list-style: none;
+  }
+  .toc ol ol li { margin-bottom: 6px; }
+  .toc ol ol li:last-child { margin-bottom: 0; }
+  .toc ol ol a {
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .toc ol ol a:hover { color: var(--accent); }
+
+  p { margin: 0 0 14px; max-width: 66ch; }
+  p:last-child { margin-bottom: 0; }
+
+  ul, ol {
+    margin: 0 0 14px;
+    padding-left: 22px;
+    max-width: 66ch;
+  }
+  ul:last-child, ol:last-child { margin-bottom: 0; }
+  li { margin-bottom: 8px; }
+  li:last-child { margin-bottom: 0; }
+  li strong { color: var(--text); }
+
+  .tip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    margin: 4px 0 16px;
+    max-width: 66ch;
+  }
+  .tip:last-child { margin-bottom: 0; }
+
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 4px 0 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-width: 100%;
+  }
+  .table-wrap:last-child { margin-bottom: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th, td {
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    word-break: break-word;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  th {
+    background: var(--surface);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  td { color: var(--text-secondary); }
+  td:first-child {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 12.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1>Lagom 使用手冊</h1>
+  <p class="subtitle">個人生活物品庫存管理 App 完整功能與標籤定義說明</p>
+  <p class="meta-line">Lagom　｜　更新日期：2026 年 8 月 16 日</p>
+
+  <div class="summary">
+    <p>以下依「畫面」整理，同一個畫面的功能、規則、標籤定義都放在一起，方便對照著畫面看。</p>
+  </div>
+
+  <nav class="toc">
+    <p class="toc-title">目錄</p>
+    <ol>
+      <li><a href="#section-home">一、首頁</a>
+        <ol>
+          <li><a href="#home-features">功能</a></li>
+          <li><a href="#home-browse">瀏覽方式</a></li>
+          <li><a href="#home-group-card">分類／空間卡片內容</a></li>
+          <li><a href="#home-item-card">物品卡片內容</a></li>
+        </ol>
+      </li>
+      <li><a href="#section-item-form">二、物品新增／編輯頁</a>
+        <ol>
+          <li><a href="#form-main-fields">主要欄位</a></li>
+          <li><a href="#form-more-fields">更多基本資料</a></li>
+          <li><a href="#form-batch">批次資料</a></li>
+          <li><a href="#table-item-tags">表格一：物品基本資料層級標籤</a></li>
+          <li><a href="#table-batch-status">表格二：物品批次層級狀態標籤</a></li>
+        </ol>
+      </li>
+      <li><a href="#section-settings">三、設定頁</a>
+        <ol>
+          <li><a href="#settings-theme">主題</a></li>
+          <li><a href="#settings-account">帳戶</a></li>
+          <li><a href="#settings-management">選項管理總覽</a></li>
+          <li><a href="#settings-backup">資料與備份</a></li>
+        </ol>
+      </li>
+    </ol>
+  </nav>
+
+  <section>
+    <h2 id="section-home">一、首頁</h2>
+
+    <h3 id="home-features">功能</h3>
+    <ul>
+      <li>兩種檢視模式可切換：<strong>依空間檢視</strong> ／ <strong>依分類檢視</strong></li>
+      <li>5 個<strong>篩選按鈕</strong>，可複選：已過期、7天內過期、待補貨、已超量、已過保（對應規則請見下方「物品基本資料層級標籤」表格）</li>
+      <li>右下角「新增」按鈕，新增一筆新物品</li>
+      <li>上方兩張統計卡片：<strong>追蹤中</strong>（顯示目前已登記物品數量）、<strong>需要留意</strong>（顯示目前有警示標籤物品數量）</li>
+      <li>分類／位置以橫向卡片呈現，點擊可展開顯示應底下物品</li>
+    </ul>
+
+    <h3 id="home-browse">瀏覽方式</h3>
+    <ol>
+      <li>先點一張分類卡片（或空間卡片）</li>
+      <li>展開後若該分類/空間底下還有子分類/區域，點擊可再展開顯示底下物品</li>
+      <li>選擇篩選按鈕可顯示有該狀態標籤的物品清單，分類／空間卡片本身內容顯示的「X 件」不會因為勾選篩選而改變</li>
+    </ol>
+
+    <h3 id="home-group-card">分類／空間卡片內容</h3>
+    <ul>
+      <li>圖示、名稱、物品件數</li>
+      <li>一行警示摘要（例如「已過期 2・7天內過期 1」），不需點開就能先知道哪個分類/空間需要留意</li>
+    </ul>
+
+    <h3 id="home-item-card">物品卡片內容</h3>
+    <p>點開分類/空間後，每個物品會用一張卡片呈現，包含：</p>
+    <ul>
+      <li>照片（或分類圖示）、名稱、所屬分類與位置</li>
+      <li>編輯／複製／刪除三個按鈕</li>
+      <li>狀態統計文字：例如「使用中 3 件・未使用 2 件」（這是把該物品底下所有批次的數量依狀態加總，不是批次筆數，也不是物品筆數）</li>
+      <li>警示標籤（規則見「物品新增／編輯頁」一節的「物品基本資料層級標籤」表格）</li>
+      <li>進度條：使用中的批次顯示剩餘量 %（若有多批次則顯示其中剩餘量最多%批次的進度條）</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="section-item-form">二、物品新增／編輯頁</h2>
+
+    <h3 id="form-main-fields">主要欄位</h3>
+    <p>照片（拍照或從相簿選取）、物品名稱*、空間*／區域／自定義位置、大分類*／子分類、容量／容量單位。</p>
+    <ul>
+      <li>*為必填欄位，儲存時若名稱、空間、大分類任一沒填，會提示「請填寫物品名稱、大分類與存放空間」</li>
+      <li>拍照／選取相簿照片的權限，只會在點擊「新增照片」的當下請求，不會在背景存取</li>
+    </ul>
+
+    <h3 id="form-more-fields">更多基本資料（點一下才展開）</h3>
+    <ul>
+      <li>品牌、尺寸（長／寬／高，固定公分，可到小數點一位）、標籤（最多 10 個）、可使用量（唯讀，自動計算顯示）、安全庫存、最大庫存、備註。</li>
+    </ul>
+    <div class="tip">所有下拉選單（分類、位置、品牌、單位、購買平台）能直接點「+ 新增」就地新增一筆新選項。</div>
+
+    <h3 id="form-batch">批次資料（同一物品可新增多筆）</h3>
+    <ul>
+      <li>每筆批次收合時只顯示「數量」跟「狀態」，點展開後可以編輯完整資料。狀態、數量*、製造日期、有效期限、保固日期、購買日期、購買價格、購買平台、備註欄位。</li>
+      <li>開封日期、剩餘量（%）只有狀態選「使用中」時才會出現。</li>
+      <li>每筆批次有自己的刪除按鈕，可以單獨移除。</li>
+    </ul>
+
+    <h3 id="table-item-tags">表格一：物品基本資料層級標籤</h3>
+  
+    <div class="table-wrap">
+      <table>
+        <colgroup>
+          <col style="width: 22%">
+          <col style="width: 78%">
+        </colgroup>
+        <thead>
+          <tr><th>標籤</th><th>出現條件</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>已過期</td><td>有任何一批次的有效期限已超過今天，或該批次被手動標記為「已過期」狀態</td></tr>
+          <tr><td>今天到期</td><td>有一批次的有效期限就是今天（還不算過期）</td></tr>
+          <tr><td>N 天內到期</td><td>有一批次的有效期限在未來 7 天內（不含已算已過期、今天到期的批次）</td></tr>
+          <tr><td>已過保</td><td>有任何一批次的保固日期已超過今天</td></tr>
+          <tr><td>待補貨</td><td>可用庫存（使用中＋未使用的數量）&lt; 安全庫存（沒設定安全庫存，不會出現這個標籤）</td></tr>
+          <tr><td>已超量</td><td>可用庫存（使用中＋未使用的數量）&gt; 最大庫存（沒設定最大庫存，不會出現這個標籤）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="table-batch-status">表格二：物品批次層級狀態標籤</h3>
+    <div class="table-wrap">
+      <table>
+        <colgroup>
+          <col style="width: 22%">
+          <col style="width: 78%">
+        </colgroup>
+        <thead>
+          <tr><th>狀態</th><th>說明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>未使用</td><td>還沒開始用（新增批次的預設狀態）<br>可四選一手動選擇</td></tr>
+          <tr><td>使用中</td><td>正在使用<br>可四選一手動選擇</td></tr>
+          <tr><td>已消耗</td><td>已用完<br>可四選一手動選擇</td></tr>
+          <tr><td>已過期</td><td>手動標記為過期，不需輸入有效期限日<br>可四選一手動選擇</td></tr>
+          <tr><td>今天到期</td><td>批次的有效期限就是今天（還不算過期）</td></tr>
+          <tr><td>N 天內到期</td><td>批次的有效期限在未來 7 天內（不含已算已過期、今天到期的批次）</td></tr>
+          <tr><td>已過保</td><td>有任何一批次的保固日期已超過今天</td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </section>
+
+  <section>
+    <h2 id="section-settings">三、設定頁</h2>
+
+    <h3 id="settings-theme">主題</h3>
+    <ul>
+      <li>夜間模式開關，手動切換，狀態會記住</li>
+    </ul>
+
+    <h3 id="settings-account">帳戶</h3>
+    <ul>
+      <li>免費版最多可新增 <strong>20 項</strong>物品，達上限後需要升級才能繼續新增</li>
+      <li>一次性付費內購可解鎖無物品數量上限</li>
+      <li>提供「恢復購買」（換裝置或重新安裝後可用）</li>
+    </ul>
+
+    <h3 id="settings-management">選項管理總覽</h3>
+    <div class="table-wrap">
+      <table>
+        <colgroup>
+          <col style="width: 22%">
+          <col style="width: 24%">
+          <col style="width: 30%">
+          <col style="width: 24%">
+        </colgroup>
+        <thead>
+          <tr><th>管理項目</th><th>層級結構</th><th>可用操作</th><th>刪除限制</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>分類管理</td><td>大分類 → 子分類（兩層）</td><td>拖曳排序、編輯名稱、刪除、把子分類移動到其他大分類底下</td><td>使用中分類無法直接刪除，需先處理相關物品</td></tr>
+          <tr><td>存放位置管理</td><td>空間 → 區域 → 自定義（三層）</td><td>拖曳排序、編輯名稱、刪除、把下層位置移動到其他上層底下</td><td>使用中存放位置無法直接刪除，需先處理相關物品</td></tr>
+          <tr><td>品牌／容量單位／購買平台／標籤管理</td><td>各自獨立管理，無層級關係</td><td>新增、重新命名、刪除、拖曳排序</td><td>無限制，刪除前不會另外提示</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="settings-backup">資料與備份</h3>
+    <ul>
+      <li><strong>匯出資料</strong>：把物品、分類、位置、品牌、容量單位、購買平台、標籤打包成 JSON 檔案，用系統分享面板儲存或傳送</li>
+      <li><strong>匯入資料</strong>：讀取先前匯出的 JSON 檔案，會完整覆蓋目前所有資料，且無法復原，操作前會跳出「匯入將覆蓋目前所有資料，確定要繼續嗎？」的二次確認</li>
+    </ul>
+  </section>
+
+  <footer></footer>
+</div>
+
+</body>
+</html>
